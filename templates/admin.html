@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Admin Dashboard</h2>
+        <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+                <p><strong>Total Feedback:</strong> {{ total }}</p>
+                <p><strong>Average Rating:</strong> {{ avg_rating }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% if total > 0 %}
+        <h4 class="mb-3">Feedback Rating Distribution</h4>
+
+        <div class="card p-3 mb-4 shadow-sm">
+            <canvas id="ratingChart"></canvas>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        const ctx = document.getElementById('ratingChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5'],
+                datasets: [{
+                    label: 'Number of Feedbacks',
+                    data: [
+                        {{ ratings_count[1] }},
+                        {{ ratings_count[2] }},
+                        {{ ratings_count[3] }},
+                        {{ ratings_count[4] }},
+                        {{ ratings_count[5] }}
+                    ],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 }
+                    }
+                }
+            }
+        });
+        </script>
+
+        <div class="mb-3">
+            <a href="/export-csv" class="btn btn-success me-2">Export CSV</a>
+            <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Rating</th>
+                        <th>Comments</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in feedbacks %}
+                    <tr>
+                        <td>{{ f.name }}</td>
+                        <td>{{ f.email }}</td>
+                        <td>{{ f.rating }}</td>
+                        <td>{{ f.comments }}</td>
+                        <td>{{ f.date_submitted }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <div class="alert alert-warning">
+            No feedback data available yet.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
