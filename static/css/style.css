@@ -1,0 +1,11 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Do NOT override .container */
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 6px;
+}
